@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listing Page</title>
+    <link rel="stylesheet" href="/public/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="../public/jquery.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <nav class="navigation">
+        <div class="navLink">
+          <a href="#">Home</a>
+        </div>
+        <div class="navLink">
+          <a href="#">Color</a>
+        </div>
+        <div class="navLink">
+          <a href="#">Contact</a>
+        </div>
+        <div class="navLink">
+          <a href="#">Cart</a>
+        </div>
+      </nav>
+    </header>
+    <div class="listingPageContainer">
+      <div class="listingImg">
+        <img src="../public/<%= listing.image %>" />
+      </div>
+
+      <div class="rightContents">
+        <div>
+          <p id="listingTitle"><%= listing.title %></p>
+        </div>
+
+        <div>
+          <p id="Price"><%= listing.price %></p>
+        </div>
+
+        <div class="listingButtons">
+          <button id="BuyNow">Buy It Now</button>
+          <button id="AddToCart">Add To Cart</button>
+        </div>
+
+        <div class="description">
+          <p><%= listing.description %></p>
+        </div>
+
+        <div>
+          <p><i>Shipping Time: 3-4 Days</i></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

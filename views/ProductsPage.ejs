@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Page</title>
+    <link rel="stylesheet" href="/public/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src='../public/jquery.js'></script>
+  </head>
+  <body>
+    <div class="header">
+        <div class="navigation">
+            <div class="navLink">
+                <a href="#">Home</a>
+            </div>
+            <div class="navLink">
+                <a href="#">Color</a>
+            </div>
+            <div class="navLink">
+                <a href="#">Contact</a>
+            </div>
+            </div>
+            <div class="navLink">
+                <a href="#">Cart</a>
+            </div>
+        </div>
+
+        <div class="colorsBody">
+            <div class="buttonsContainer">
+                <button id="RedsButton">Reds</button>
+                <button id="BluesButton">Blues</button>
+                <button id="GreensButton">Greens</button>
+                <button id="Others">Others</button>      
+        </div>
+        <div class="productsContainer">
+            <% for (i =0 ; i < products.length ; i++) { %>
+                <div class="listing">
+                    <div class="listingImage">
+                        <a href="products/<%= products[i].ID %>">
+                            <img src='/public/<%= products[i].image %>'>
+                        </a>
+                    </div>
+                    <div class="listingTittle">
+                        <a href="products/<%= products[i].ID %>">
+                        <p><%= products[i].tittle %></p>
+                        </a>
+                    </div>
+                    <div class="listingPrice">
+                        <a href="products/<%= products[i].ID %>">
+                        <p>$<%= products[i].price %></p>
+                        </a>
+                    </div>
+                    <div class="listingButons">
+                        <button id="BuyNow"> Buy It Now</button> <button id="AddToCart"> Add To Cart</button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+        </div>
+    </div>
+    </body>
+  </body>
+</html>
