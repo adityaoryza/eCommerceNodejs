@@ -1,9 +1,9 @@
 # This is a simple web server built using the Express.js framework. It listens on port 8080 and provides three different routes:
 
     * - the homepage
-    *products - a page that lists all products
-    *products/:ID - a page that displays a specific product based on its ID
-    *product/:type - a page that lists all products of a certain type
+    * products - a page that lists all products
+    * products/:ID - a page that displays a specific product based on its ID
+    * product/:type - a page that lists all products of a certain type
 
 ## Usage
 
