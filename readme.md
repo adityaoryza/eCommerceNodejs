@@ -5,7 +5,7 @@
     /products/:ID - a page that displays a specific product based on its ID
     /product/:type - a page that lists all products of a certain type
 
-** Usage **
+**Usage**
 
 > To run this web server, you will need to have Node.js and the Express.js framework installed on your machine. Once you have these dependencies installed, you can follow these steps:
 
