@@ -1,19 +1,19 @@
 # This is a simple web server built using the Express.js framework. It listens on port 8080 and provides three different routes:
 
-    * - the homepage
-    * products - a page that lists all products
-    * products/:ID - a page that displays a specific product based on its ID
-    * product/:type - a page that lists all products of a certain type
+    1.- the homepage
+    2.products - a page that lists all products
+    3.products/:ID - a page that displays a specific product based on its ID
+    4.product/:type - a page that lists all products of a certain type
 
 ## Usage
 
 >To run this web server, you will need to have Node.js and the Express.js framework installed on your machine. Once you have these dependencies installed, you can follow these steps:
 
-    Clone the repository to your local machine
-    Navigate to the project directory in your terminal
-    Run the command npm install to install any necessary dependencies
-    Run the command node server.js to start the server
-    Open your web browser and navigate to http://localhost:8080 to view the homepage
+    1.Clone the repository to your local machine
+    2.Navigate to the project directory in your terminal
+    3.Run the command npm install to install any necessary dependencies
+    4.Run the command node server.js to start the server
+    5.Open your web browser and navigate to http://localhost:8080 to view the homepage
 
 **Code Explanation**
 
