@@ -16,7 +16,8 @@ To run this web server, you will need to have Node.js and the Express.js framewo
     Open your web browser and navigate to http://localhost:8080 to view the homepage
 
 Code Explanation
-Defining the Port
+
+#Defining the Port
 
 The first line of code defines the port number that the server will listen to:
 
