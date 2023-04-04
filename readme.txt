@@ -19,7 +19,7 @@ Code Explanation
 Defining the Port
 
 The first line of code defines the port number that the server will listen to:
-
+```
 javascript :
 
 const port = 8080;
@@ -27,49 +27,49 @@ const port = 8080;
 Requiring Express
 
 The second line of code requires the Express module:
-
+```
 javascript :
-
+```
 const express = require('express');
 
 Creating an Express Application Instance
 
 The third line of code creates a new instance of the Express application:
-
+```
 javascript :
-
+```
 const app = express();
 
 Setting the View Engine to EJS
 
 The fourth line of code sets the view engine to EJS:
-
+```
 javascript :
-
+```
 app.set('view engine', 'ejs');
 
 Serving Static Files
 
 The fifth line of code serves static files from the public directory:
-
+```
 javascript :
-
+```
 app.use('/public', express.static('public'));
 
 Requiring External Data
 
 The sixth line of code requires an external module file that contains an array of data:
-
+```
 javascript :
-
+```
 var arrayDB = require('../public/DBdata');
 
 Homepage Route
 
 The seventh line of code defines a route for the homepage:
-
+```
 javascript :
-
+```
 app.get('/', function (req, res) {
   res.send('anda di homepage');
 });
@@ -77,9 +77,9 @@ app.get('/', function (req, res) {
 Products Route
 
 The eighth line of code defines a route for the products page:
-
+```
 javascript :
-
+```
 app.get('/products', function (req, res) {
   res.render('ProductsPage', { products: arrayDB });
 });
@@ -87,9 +87,9 @@ app.get('/products', function (req, res) {
 Specific Product Route
 
 The ninth line of code defines a route for a specific product page using ID:
-
+```
 javascript :
-
+```
 app.get('/products/:ID', function (req, res) {
   var ID = req.params.ID;
   for (i = 0; i < arrayDB.length; i++) {
@@ -102,9 +102,9 @@ app.get('/products/:ID', function (req, res) {
 Product Type Route
 
 The tenth line of code defines a route for a product type:
-
+```
 javascript :
-
+```
 app.get('/product/:type', function (req, res) {
   var type = req.params.type;
   var tempArray = [];
@@ -119,9 +119,10 @@ app.get('/product/:type', function (req, res) {
 Starting the Server
 
 The final line of code starts the server and listens on the specified port:
-
+```
 javascript :
-
+```
 app.listen(port, function () {
   console.log('listening on port 8080');
 });
+```
