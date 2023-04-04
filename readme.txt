@@ -1,4 +1,4 @@
-This is a simple web server built using the Express.js framework. It listens on port 8080 and provides three different routes:
+# This is a simple web server built using the Express.js framework. It listens on port 8080 and provides three different routes:
 
     / - the homepage
     /products - a page that lists all products
@@ -17,7 +17,7 @@ To run this web server, you will need to have Node.js and the Express.js framewo
 
 Code Explanation
 
-#Defining the Port
+Defining the Port
 
 The first line of code defines the port number that the server will listen to:
 
