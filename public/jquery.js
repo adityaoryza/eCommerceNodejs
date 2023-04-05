@@ -34,11 +34,28 @@ $(document).ready(function () {
                     <p>$${price}</p>
                 </div>
                 <div class="listingButtons">
-                    <button id="BuyNow"> Buy It Now</button> <button id="AddToCart"> Add To Cart</button>
+                    <button id="BuyNow"> Buy It Now</button>
+                     <button id="AddToCart" value ='${ID}'> Add To Cart</button>
                 </div>
             </div>
             `);
         }
+      },
+    });
+  });
+
+  $('body').on('click', '#addCart', function () {
+    var ID = $(this).val();
+
+    $.ajax({
+      url: `/addCart/${ID}`,
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        $('.navLink em').html('');
+        var cartNumb = data.cartNumb;
+
+        $('.navLink em').html(cartNumb);
       },
     });
   });

@@ -4,6 +4,7 @@ const port = 8080;
 // Require the Express module
 const express = require('express');
 
+const cookieParser = require('cookie-parser');
 // Create a new Express application instance
 const app = express();
 
@@ -12,6 +13,7 @@ app.set('view engine', 'ejs');
 
 // Serve static files from the "public" directory
 app.use('/public', express.static('public'));
+app.use(cookieParser());
 
 // Require the data from the external module file
 var arrayDB = require('../public/DBdata');
@@ -25,7 +27,16 @@ app.get('/', function (req, res) {
 // Define a route for the product page
 app.get('/products', function (req, res) {
   // When the user requests the product page, render an EJS template called "ProductsPage"
-  res.render('ProductsPage', { products: arrayDB });
+  var cookieValue = req.cookies;
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+  } else {
+    var cookieArray = [];
+  }
+  res.render('ProductsPage', {
+    products: arrayDB,
+    cartNumb: cookieArray.length,
+  });
 });
 
 // Define a route for a specific product page using ID
@@ -59,6 +70,29 @@ app.get('/product/:type', function (req, res) {
 
   // Send the temporary array of products as a JSON response
   res.send({ products: tempArray });
+});
+
+app.get('/addCart/:ID', function (req, res) {
+  var ID = req.params.ID;
+  var cookieValue = req.cookies;
+
+  if (!cookieValue.cart) {
+    var cookieArray = [];
+    cookieArray.push(ID);
+    var cookieStringArray = JSON.stringify(cookieArray);
+
+    res.cookie('cart', cookieStringArray);
+    res.send({ cartNumb: 1 });
+  } else {
+    var cartValue = cookieValue.cart;
+    var cookieArray = JSON.parse(cartValue);
+    cookieArray.push(ID);
+    var cookieStringArray = JSON.stringify(cookieArray);
+
+    res.clearCookie('cart');
+    res.cookie('cart', cookieStringArray);
+    res.send({ cartNumb: cookieArray.length });
+  }
 });
 
 // Start the server and listen on the specified port

@@ -16,14 +16,14 @@
                 <a href="#">Home</a>
             </div>
             <div class="navLink">
-                <a href="#">Color</a>
+                <a href="products">Color</a>
             </div>
             <div class="navLink">
                 <a href="#">Contact</a>
             </div>
-            </div>
             <div class="navLink">
-                <a href="#">Cart</a>
+                <a href="#">Cart <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %></em></a>
+            </div>
             </div>
         </div>
 
@@ -53,7 +53,8 @@
                         </a>
                     </div>
                     <div class="listingButons">
-                        <button id="BuyNow"> Buy It Now</button> <button id="AddToCart"> Add To Cart</button>
+                        <button id="BuyNow"> Buy It Now</button> 
+                        <button id="addCart" value="<%= products[i].ID %>"> Add To Cart</button>
                     </div>
                 </div>
             <% } %>
