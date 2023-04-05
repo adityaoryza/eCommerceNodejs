@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Listing Page</title>
-    <link rel="stylesheet" href="/public/style.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Ubuntu+Condensed&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../public/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="../public/jquery.js"></script>
   </head>
   <body>
-    <header class="header">
-      <nav class="navigation">
+    <div class="header">
+      <div class="navigation">
         <div class="navLink">
           <a href="#">Home</a>
         </div>
         <div class="navLink">
-          <a href="#">Color</a>
+          <a href="../products">Colors</a>
         </div>
         <div class="navLink">
-          <a href="#">Contact</a>
+          <a href="../cart"
+            >Cart <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %> </em></a
+          >
         </div>
         <div class="navLink">
-          <a href="#">Cart</a>
+          <a href="../contact">Contact</a>
         </div>
-      </nav>
-    </header>
+      </div>
+    </div>
+
     <div class="listingPageContainer">
       <div class="listingImg">
         <img src="../public/<%= listing.image %>" />
@@ -35,22 +39,22 @@
         <div>
           <p id="listingTitle"><%= listing.title %></p>
         </div>
-
         <div>
-          <p id="Price"><%= listing.price %></p>
+          <p id="price">$<%= listing.price %></p>
         </div>
 
         <div class="listingButtons">
-          <button id="BuyNow">Buy It Now</button>
-          <button id="addCart">Add To Cart</button>
+          <a href="../buyNow/<%= listing.ID %>">
+            <button id="buyNow">Buy it Now</button>
+          </a>
+          <button id="addCart" value="<%= listing.ID %> ">Add to Cart</button>
         </div>
 
         <div class="description">
           <p><%= listing.description %></p>
         </div>
-
         <div>
-          <p><i>Shipping Time: 3-4 Days</i></p>
+          <p><i>Shipping Time: 4-5 Days</i></p>
         </div>
       </div>
     </div>
