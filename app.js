@@ -1,13 +1,28 @@
 const port = 8080;
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 app.use(cookieParser());
+app.use(bodyParser.json);
+app.use(bodyParser.urlencoded({ extended: false }));
 
 var arrayDB = require('./public/DBdata');
+
+mongoose.connect('mongodb://localhost:ecommerceDB');
+mongoose.connection
+  .once('open', function () {
+    console.log('successfully conecected to database');
+  })
+  .on('error', function (err) {
+    console.log(err);
+  });
+
+const contactEntry = require('./models/contactEntry');
 
 app.get('/', function (req, res) {
   var cookieValue = req.cookies;
@@ -97,6 +112,53 @@ app.get('/remove/:ID', function (req, res) {
   res.clearCookie('cart');
   res.cookie('cart', stringArray);
   res.redirect('/cart');
+});
+
+app.get('/contact', function (req, res) {
+  var cookieValue = req.cookies;
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+  } else {
+    var cookieArray = [];
+  }
+  res.render('contactPage', {
+    cartNumb: cookieArray.length,
+  });
+});
+
+app.post('/submit/:type', function (req, res) {
+  var type = req.params.type;
+  if (type == 'contact') {
+    var contactName = req.body.name;
+    var contactEmail = req.body.email;
+    var contactSubject = req.body.subject;
+    var contactComment = req.body.comment;
+
+    var newContactEntry = new contactEntry({
+      name: contactName,
+      email: contactEmail,
+      subject: contactSubject,
+      comment: contactComment,
+    });
+
+    newContactEntry.save();
+    res.redirect('/submission/Form_Successfully_Submitted');
+  }
+});
+
+app.get('submission/:text', function (req, ress) {
+  var cookieValue = req.cookies;
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+  } else {
+    var cookieArray = [];
+  }
+
+  var text = req.params.text;
+  res.render('contactPage', {
+    cartNumb: cookieArray.length,
+    successText: text,
+  });
 });
 
 // ajax routes
