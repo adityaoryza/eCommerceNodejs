@@ -126,8 +126,25 @@ app.get('/contact', function (req, res) {
   });
 });
 
+app.get('submission/:text', function (req, ress) {
+  var cookieValue = req.cookies;
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+  } else {
+    var cookieArray = [];
+  }
+
+  var text = req.params.text;
+
+  res.render('contactPage', {
+    cartNumb: cookieArray.length,
+    successText: text,
+  });
+});
+
 app.post('/submit/:type', function (req, res) {
   var type = req.params.type;
+
   if (type == 'contact') {
     var contactName = req.body.name;
     var contactEmail = req.body.email;
@@ -144,21 +161,6 @@ app.post('/submit/:type', function (req, res) {
     newContactEntry.save();
     res.redirect('/submission/Form_Successfully_Submitted');
   }
-});
-
-app.get('submission/:text', function (req, ress) {
-  var cookieValue = req.cookies;
-  if (cookieValue.cart) {
-    var cookieArray = JSON.parse(cookieValue.cart);
-  } else {
-    var cookieArray = [];
-  }
-
-  var text = req.params.text;
-  res.render('contactPage', {
-    cartNumb: cookieArray.length,
-    successText: text,
-  });
 });
 
 // ajax routes
