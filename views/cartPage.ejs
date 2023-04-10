@@ -8,7 +8,7 @@
     />
     <link rel="stylesheet" type="text/css" href="../public/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="../public/jquery.js"></script>
+    <script src="public/jquery.js"></script>
   </head>
   <body>
     <div class="header">
@@ -17,15 +17,15 @@
           <a href="#">Home</a>
         </div>
         <div class="navLink">
-          <a href="../products">Colors</a>
+          <a href="products">Colors</a>
         </div>
         <div class="navLink">
-          <a href="../cart"
+          <a href="cart"
             >Cart <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %> </em></a
           >
         </div>
         <div class="navLink">
-          <a href="../contact">Contact</a>
+          <a href="contact">Contact</a>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
       <% for(var i=0;i<cartValues.length;i++){ %>
       <div class="item">
         <div class="itemContent">
-          <img src='../public/<%= cartValues[i].image %>'>
+          <img src='public/<%= cartValues[i].image %>'>
           <div class="listingText">
             <h2><%= cartValues[i].title %> : $<%= cartValues[i].price %></h2>
           </div>
