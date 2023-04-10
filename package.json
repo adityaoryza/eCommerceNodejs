@@ -1,10 +1,10 @@
 {
   "name": "e-commercenodejs",
   "version": "1.0.0",
-  "description": "",
+  "description": "/ - the homepage     /products - a page that lists all products     /products/:ID - a page that displays a specific product based on its ID     /product/:type - a page that lists all products of a certain type",
   "main": "App.js",
   "scripts": {
-    "start": "node App",
+    "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "aditya",
@@ -14,5 +14,13 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-parser": "^1.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityaoryza/E-CommerceNodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adityaoryza/E-CommerceNodejs/issues"
+  },
+  "homepage": "https://github.com/adityaoryza/E-CommerceNodejs#readme"
 }

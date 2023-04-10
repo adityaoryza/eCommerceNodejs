@@ -47,7 +47,59 @@ app.get('/products/:ID', function (req, res) {
     }
   }
 });
+// routes for cart page
+app.get('/cart', function (req, res) {
+  var cookieValue = req.cookies;
 
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+    cookieArray.sort();
+
+    var tempCartArray = [];
+
+    for (var i = 0; i < cookieArray.length; i++) {
+      for (var c = 0; c < arrayDB.length; c++) {
+        if (cookieArray[i] == arrayDB[c].ID) {
+          tempCartArray.push(arrayDB[c]);
+        }
+      }
+    }
+
+    var cartTotal = 0;
+    for (var i = 0; i < tempCartArray.length; i++) {
+      cartTotal = cartTotal + tempCartArray[i].price;
+    }
+  } else {
+    var cartTotal = 0;
+    var tempCartArray = [];
+    var cookieArray = [];
+  }
+  res.render('cartPage', {
+    cartNumb: cookieArray.length,
+    cartValues: tempCartArray,
+    total: cartTotal,
+  });
+});
+
+app.get('/remove/:ID', function (req, res) {
+  var cookieValue = req.cookies;
+  var cookieArray = JSON.parse(cookieValue.cart);
+  var IDremove = req.params.ID;
+
+  for (var i = 0; i < cookieArray.length; i++) {
+    if (cookieArray[i] == IDremove) {
+      cookieArray.splice(i, 1);
+      break;
+    }
+  }
+
+  var stringArray = JSON.stringify(cookieArray);
+  res.clearCookie('cart');
+  res.cookie('cart', stringArray);
+  res.redirect('/cart');
+});
+
+// ajax routes
 app.get('/product/:type', function (req, res) {
   var type = req.params.type;
   var tempArray = [];
