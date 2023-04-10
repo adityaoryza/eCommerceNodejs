@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Listing Page</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Ubuntu+Condensed&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../public/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="../public/jquery.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="navigation">
+        <div class="navLink">
+          <a href="#">Home</a>
+        </div>
+        <div class="navLink">
+          <a href="../products">Colors</a>
+        </div>
+        <div class="navLink">
+          <a href="../cart"
+            >Cart <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %> </em></a
+          >
+        </div>
+        <div class="navLink">
+          <a href="../contact">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart">
+      <% for(var i=0;i<cartValues.length;i++){ %>
+      <div class="item">
+        <div class="itemContent">
+          <img src='../public/<%= cartValues[i].image %>'>
+          <div class="listingText">
+            <h2><%= cartValues[i].title %> : $<%= cartValues[i].price %></h2>
+          </div>
+        </div>
+
+        <div class="itemRemove">
+          <a href='../remove/<%= cartValues[i].ID %>'>
+            <button>Remove</button>
+          </a>
+        </div>
+      </div>
+      <% } %>
+
+      <div class="checkout">
+        <div>
+          <% if(total > 0){ %>
+            <h2>Total : $<%= total %> + $5 (Shipping)</h2>
+          <% }else{ %>
+            <h2>NO ITEM IN CART</h2>
+          <% }%>
+        </div>
+        <hr />
+      </div>
+    </div>
+
+  </body>
+</html>
