@@ -8,21 +8,22 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use('/public', express.static('public'));
 app.use(cookieParser());
-app.use(bodyParser.json);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var arrayDB = require('./public/DBdata');
 
-mongoose.connect('mongodb://localhost:ecommerceDB');
+mongoose.connect('mongodb://localhost/ecommerceDB');
 mongoose.connection
   .once('open', function () {
-    console.log('successfully conecected to database');
+    console.log('successfully connected to DB...');
   })
   .on('error', function (err) {
     console.log(err);
   });
 
 const contactEntry = require('./models/contactEntry');
+// const orderEntry = require('./models/orderEntry');
 
 app.get('/', function (req, res) {
   var cookieValue = req.cookies;
@@ -62,6 +63,7 @@ app.get('/products/:ID', function (req, res) {
     }
   }
 });
+
 // routes for cart page
 app.get('/cart', function (req, res) {
   var cookieValue = req.cookies;
@@ -116,6 +118,7 @@ app.get('/remove/:ID', function (req, res) {
 
 app.get('/contact', function (req, res) {
   var cookieValue = req.cookies;
+
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
   } else {
@@ -126,7 +129,7 @@ app.get('/contact', function (req, res) {
   });
 });
 
-app.get('submission/:text', function (req, ress) {
+app.get('/submission/:text', function (req, res) {
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
@@ -136,7 +139,7 @@ app.get('submission/:text', function (req, ress) {
 
   var text = req.params.text;
 
-  res.render('contactPage', {
+  res.render('submissionPage', {
     cartNumb: cookieArray.length,
     successText: text,
   });
@@ -167,6 +170,7 @@ app.post('/submit/:type', function (req, res) {
 app.get('/product/:type', function (req, res) {
   var type = req.params.type;
   var tempArray = [];
+
   for (i = 0; i < arrayDB.length; i++) {
     if (type === arrayDB[i].type) {
       tempArray.push(arrayDB[i]);
@@ -179,6 +183,7 @@ app.get('/product/:type', function (req, res) {
 app.get('/addCart/:ID', function (req, res) {
   var ID = req.params.ID;
   var cookieValue = req.cookies;
+
   if (!cookieValue.cart) {
     var cookieArray = [];
     cookieArray.push(ID);
