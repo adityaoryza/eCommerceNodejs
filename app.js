@@ -3,6 +3,14 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const paypal = require('paypal-rest-sdk');
+paypal.configure({
+  mode: 'sandbox',
+  client_id:
+    'AS8WhP5kI_S2om83A2i88dvBJVQJxTwAGbhkABeIk1O_6JKcUVCDiJLkEBz4-iJngaTeb_CdXL1Qzcea',
+  client_secret:
+    'EHa94zj1eJxIUj8eQ9a3c_F5ZRckzNcsmnBq38vwGBe7-n7R3ijF_I75Anh4kLyS5enqQohArXB4tOB-',
+});
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -23,7 +31,7 @@ mongoose.connection
   });
 
 const contactEntry = require('./models/contactEntry');
-// const orderEntry = require('./models/orderEntry');
+const orderEntry = require('./models/orderEntry');
 
 app.get('/', function (req, res) {
   var cookieValue = req.cookies;
@@ -92,6 +100,7 @@ app.get('/cart', function (req, res) {
     var cookieArray = [];
   }
   res.render('cartPage', {
+    cart: cookieValue.cart,
     cartNumb: cookieArray.length,
     cartValues: tempCartArray,
     total: cartTotal,
@@ -164,6 +173,126 @@ app.post('/submit/:type', function (req, res) {
     newContactEntry.save();
     res.redirect('/submission/Form_Successfully_Submitted');
   }
+});
+
+app.post('/chargePaypal', function (req, res) {
+  var items = req.body.description;
+  items = JSON.parse(items);
+
+  var chargeAmount = 5;
+
+  for (var i = 0; i < items.length; i++) {
+    for (var c = 0; c < arrayDB.length; c++) {
+      if (items[i] == arrayDB[c].ID) {
+        chargeAmount = chargeAmount + arrayDB[c].price;
+      }
+    }
+  }
+
+  var create_payment_json = {
+    intent: 'sale',
+    payer: {
+      payment_method: 'paypal',
+    },
+    redirect_urls: {
+      return_url: `https://localhost:8080/success?price=${chargeAmount}&description=${items}`,
+      cancel_url: 'https://localhost:8080/cancel',
+    },
+    transactions: [
+      {
+        item_list: {
+          items: [
+            {
+              name: 'eCommerce Sale',
+              sku: `${items}`,
+              price: `${chargeAmount}`,
+              currency: 'USD',
+              quantity: 1,
+            },
+          ],
+        },
+        amount: {
+          currency: 'USD',
+          total: `${chargeAmount}`,
+        },
+        description: 'Sale of Color(s)',
+      },
+    ],
+  };
+
+  paypal.payment.create(create_payment_json, function (error, payment) {
+    if (error) {
+      res.send('an error has occured');
+      throw error;
+    } else {
+      for (var i = 0; i < payment.links.length; i++) {
+        if (payment.links[i].rel === 'approval_url') {
+          res.redirect(payment.links[i].href);
+        }
+      }
+    }
+  });
+});
+
+app.get('/success', function (req, res) {
+  var payerID = req.query.payerID;
+  var paymentID = req.query.paymentID;
+  var chargeAmount = req.query.price;
+  var items = req.query.description;
+
+  var execute_payment_json = {
+    payer_id: payerID,
+    transactions: [
+      {
+        amount: {
+          currency: 'USD',
+          total: `${chargeAmount}`,
+        },
+      },
+    ],
+  };
+
+  paypal.payment.execute(
+    paymentID,
+    execute_payment_json,
+    function (err, payment) {
+      if (err) {
+        res.send('an error occurred:' + err);
+        throw err;
+      } else {
+        var shippingEmail = payment.payer.payer_info_email;
+        var shippingName =
+          payment.payer.payer_info.shipping_address.receipient_name;
+        var shippingAddress =
+          payment.payer.payer_info.shipping_address.line1 +
+          ' ' +
+          payment.payer.payer_info.shipping_address.line2;
+
+        var shippingZip = payment.payer.payer_info.shipping_address.postal_code;
+        var shippingState = payment.payer.payer_info.shipping_address.state;
+        var shippingCity = payment.payer.payer_info.shipping_address.city;
+        var shippingCountry =
+          payment.payer.payer_info.shipping_address.country_code;
+        var Type = 'Paypal';
+
+        var newOrderEntry = new orderEntry({
+          name: shippingName,
+          email: shippingEmail,
+          address: shippingAddress,
+          zip: shippingZIP,
+          city: shippingCity,
+          country: shippingCountry,
+          description: items,
+          grossTotal: chargeAmount,
+          type: Type,
+        });
+
+        newOrderEntry.save();
+        res.clearCookie('cart');
+        res.redirect('/submission/Your_Payment_Was_Successful');
+      }
+    }
+  );
 });
 
 // ajax routes

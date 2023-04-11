@@ -57,6 +57,11 @@
           <% }%>
         </div>
         <hr />
+
+        <form action="/chargePaypal" method="POST">
+          <input type="submit" value="Paypal" class="paypalButton">
+          <input type="hidden" name="description" value="<%= cart %>">
+        </form>
       </div>
     </div>
 
