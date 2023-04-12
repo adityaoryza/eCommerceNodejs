@@ -73,6 +73,26 @@ app.get('/products/:ID', function (req, res) {
   }
 });
 
+app.get('/buyNow/:ID', function (req, res) {
+  var cookieValue = req.cookies;
+  var ID = req.params.ID;
+
+  if (cookieValue.cart) {
+    var cookieStringArray = cookieValue.cart;
+    var cookieArray = JSON.parse(cookieStringArray);
+    cookieArray.push(ID);
+    cookieStringArray = JSON.stringify(cookieArray);
+    res.clearCookie('cart');
+  } else {
+    var cookieStringArray = [];
+    cookieArray.push(ID);
+    var cookieStringArray = JSON.stringify(cookieStringArray);
+  }
+
+  res.cookie('cart', cookieStringArray);
+  res.redirect('../cart');
+});
+
 // routes for cart page
 app.get('/cart', function (req, res) {
   var cookieValue = req.cookies;

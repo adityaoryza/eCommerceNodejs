@@ -30,9 +30,9 @@ $(document).ready(function () {
 								<p>$${price}</p>
 							</div>
 							<div class='listingButtons'>
-								<a href="buyNow/${ID}">
-									<button id="buyNow">Buy it Now</button>
-								</a>
+               <a href='buyNow/${ID}'>
+                <button id="buyNow" > Buy It Now</button> 
+               </a>
 								<button id='addCart' value='${ID}'>Add to Cart</button>
 							</div>
 						</div>

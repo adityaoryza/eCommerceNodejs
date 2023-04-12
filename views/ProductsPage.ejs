@@ -53,7 +53,9 @@
                         </a>
                     </div>
                     <div class="listingButons">
-                        <button id="BuyNow"> Buy It Now</button> 
+                        <a href="buyNow/<%= products[i].ID %>">
+                            <button id="buyNow"> Buy It Now</button> 
+                        </a>
                         <button id="addCart" value="<%= products[i].ID %>"> Add To Cart</button>
                     </div>
                 </div>
