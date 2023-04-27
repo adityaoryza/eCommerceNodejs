@@ -2,68 +2,86 @@
 <html>
   <head>
     <title>Listing Page</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Ubuntu+Condensed&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" type="text/css" href="../public/style.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="public/jquery.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Ubuntu+Condensed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../public/stylse.css"> -->
   </head>
   <body>
-    <div class="header">
-      <div class="navigation">
-        <div class="navLink">
-          <a href="#">Home</a>
-        </div>
-        <div class="navLink">
-          <a href="products">Colors</a>
-        </div>
-        <div class="navLink">
-          <a href="cart"
-            >Cart <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %> </em></a
-          >
-        </div>
-        <div class="navLink">
-          <a href="contact">Contact</a>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 header">
+
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Listing Page</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="products">Colors</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="cart">
+                    Cart
+                    <em>
+                      <% if(cartNumb != 0) { %>
+                        <%= cartNumb %>
+                      <% } %>
+                    </em>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="contact">Contact</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+
         </div>
       </div>
-    </div>
+      <!-- cart container -->
+      <div class="container-fluid cart">
+        <% for(var i=0;i<cartValues.length;i++){ %>
+        <div class="item row">
 
-    <div class="cart">
-      <% for(var i=0;i<cartValues.length;i++){ %>
-      <div class="item">
-        <div class="itemContent">
-          <img src='public/<%= cartValues[i].image %>'>
-          <div class="listingText">
-            <h2><%= cartValues[i].title %> : $<%= cartValues[i].price %></h2>
+          <div class="container-fluid itemContent col-md-6">
+            <img src='public/<%= cartValues[i].image %>' class="rounded float-start">
+            <div class="listingText">
+              <p class="fs-5"><%= cartValues[i].title %> : $<%= cartValues[i].price %></p>
+            </div>
           </div>
-        </div>
 
-        <div class="itemRemove">
-          <a href='../remove/<%= cartValues[i].ID %>'>
-            <button>Remove</button>
-          </a>
+          <div class="container-fluid itemRemove col-md-6 text-lg-right text-sm-left">
+            <a href='../remove/<%= cartValues[i].ID %>'>
+              <button class="btn btn-danger">Remove</button>
+            </a>
+          </div>
+          
+        </div>
+        <% } %>
+      
+        <div class="checkout d-grid gap-2 d-md-flex justify-content-md-end">
+          <div>
+            <% if(total > 0){ %>
+              <h2>Total : $<%= total %> + $5 (Shipping)</h2>
+            <% }else{ %>
+              <h2>NO ITEM IN CART</h2>
+            <% }%>
+          </div>
+          <hr />
+      
+          <form action="/chargePaypal" method="POST">
+            <input type="submit" value="Paypal" class="btn btn-primary">
+            <input type="hidden" name="description" value="<%= cart %>">
+          </form>
         </div>
       </div>
-      <% } %>
-
-      <div class="checkout">
-        <div>
-          <% if(total > 0){ %>
-            <h2>Total : $<%= total %> + $5 (Shipping)</h2>
-          <% }else{ %>
-            <h2>NO ITEM IN CART</h2>
-          <% }%>
-        </div>
-        <hr />
-
-        <form action="/chargePaypal" method="POST">
-          <input type="submit" value="Paypal" class="paypalButton">
-          <input type="hidden" name="description" value="<%= cart %>">
-        </form>
-      </div>
-    </div>
-
-  </body>
+      
+  
+</body>
 </html>
