@@ -1,15 +1,15 @@
 $(document).ready(function () {
   // Set up a click event listener on the "buttonsContainer" container that listens for button clicks
 
-  $('.buttonsContainer').on('click', 'button', function () {
+  $(".buttonsContainer").on("click", "button", function () {
     var color = $(this).text();
 
     $.ajax({
       url: `/product/${color}`,
-      type: 'GET',
-      dataType: 'json',
+      type: "GET",
+      dataType: "json",
       success: function (data) {
-        $('.productsContainer').html('');
+        $(".productsContainer").html("");
         var productsArrayLength = data.products.length;
 
         for (i = 0; i < productsArrayLength; i++) {
@@ -18,7 +18,7 @@ $(document).ready(function () {
           var price = data.products[i].price;
           var ID = data.products[i].ID;
 
-          $('.productsContainer').append(`
+          $(".productsContainer").append(`
 						<div class='listing'>
 							<div class='listingImage'>
 								<a href='products/${ID}'><img src='public/${img}'></a>
@@ -42,19 +42,21 @@ $(document).ready(function () {
     });
   });
 
-  $('body').on('click', '#addCart', function () {
+  $("body").on("click", "#addCart", function () {
     var ID = $(this).val();
 
     $.ajax({
       url: `/addCart/${ID}`,
-      type: 'GET',
-      dataType: 'json',
+      type: "GET",
+      dataType: "json",
       success: function (data) {
-        $('.navLink em').html('');
+        // $('.navLink em').html('');
+        $(".nav-item em").html("");
 
         var cartNumb = data.cartNumb;
 
-        $('.navLink em').html(cartNumb);
+        // $('.navLink em').html(cartNumb);
+        $(".nav-item em").html(cartNumb);
       },
     });
   });
