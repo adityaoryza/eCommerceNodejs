@@ -1,60 +1,71 @@
-const port = 8080;
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const paypal = require('paypal-rest-sdk');
+const port = process.env.PORT || 3000;
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const paypal = require("paypal-rest-sdk");
 // using paypal API requires
 paypal.configure({
-  mode: 'sandbox',
+  mode: "sandbox",
   client_id:
-    'AS8WhP5kI_S2om83A2i88dvBJVQJxTwAGbhkABeIk1O_6JKcUVCDiJLkEBz4-iJngaTeb_CdXL1Qzcea',
+    "AS8WhP5kI_S2om83A2i88dvBJVQJxTwAGbhkABeIk1O_6JKcUVCDiJLkEBz4-iJngaTeb_CdXL1Qzcea",
   client_secret:
-    'EHa94zj1eJxIUj8eQ9a3c_F5ZRckzNcsmnBq38vwGBe7-n7R3ijF_I75Anh4kLyS5enqQohArXB4tOB-',
+    "EHa94zj1eJxIUj8eQ9a3c_F5ZRckzNcsmnBq38vwGBe7-n7R3ijF_I75Anh4kLyS5enqQohArXB4tOB-",
 });
 const app = express();
 
-app.set('view engine', 'ejs');
-app.use('/public', express.static('public'));
+app.set("view engine", "ejs");
+app.use("/public", express.static("public"));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var arrayDB = require('./public/DBdata');
+var arrayDB = require("./public/DBdata");
 
-mongoose.connect('mongodb://localhost/ecommerceDB');
+mongoose.connect("mongodb://localhost/ecommerceDB");
 mongoose.connection
-  .once('open', function () {
-    console.log('successfully connected to DB...');
+  .once("open", function () {
+    console.log("successfully connected to DB...");
   })
-  .on('error', function (err) {
+  .on("error", function (err) {
     console.log(err);
   });
 
-const contactEntry = require('./models/contactEntry');
-const orderEntry = require('./models/orderEntry');
+const contactEntry = require("./models/contactEntry");
+const orderEntry = require("./models/orderEntry");
 
-app.get('/', function (req, res) {
-  var cookieValue = req.cookies;
-  console.log(cookieValue);
-  res.clearCookie('cart');
-  res.send('anda di homepage');
-});
-
-app.get('/products', function (req, res) {
+app.get("/", function (req, res) {
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
   } else {
     var cookieArray = [];
   }
-  res.render('ProductsPage', {
+  res.render("homePage", {
+    products: arrayDB,
+    cartNumb: cookieArray.length,
+  });
+
+  // var cookieValue = req.cookies;
+  // console.log(cookieValue);
+  // res.clearCookie("cart");
+  // res.render("homePage");
+});
+
+app.get("/products", function (req, res) {
+  var cookieValue = req.cookies;
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+  } else {
+    var cookieArray = [];
+  }
+  res.render("ProductsPage", {
     products: arrayDB,
     cartNumb: cookieArray.length,
   });
 });
 
-app.get('/products/:ID', function (req, res) {
+app.get("/products/:ID", function (req, res) {
   var ID = req.params.ID;
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
@@ -65,7 +76,7 @@ app.get('/products/:ID', function (req, res) {
 
   for (i = 0; i < arrayDB.length; i++) {
     if (ID == arrayDB[i].ID) {
-      res.render('listingPage', {
+      res.render("itemPage", {
         listing: arrayDB[i],
         cartNumb: cookieArray.length,
       });
@@ -73,7 +84,7 @@ app.get('/products/:ID', function (req, res) {
   }
 });
 
-app.get('/buyNow/:ID', function (req, res) {
+app.get("/buyNow/:ID", function (req, res) {
   var cookieValue = req.cookies;
   var ID = req.params.ID;
 
@@ -82,19 +93,19 @@ app.get('/buyNow/:ID', function (req, res) {
     var cookieArray = JSON.parse(cookieStringArray);
     cookieArray.push(ID);
     cookieStringArray = JSON.stringify(cookieArray);
-    res.clearCookie('cart');
+    res.clearCookie("cart");
   } else {
     var cookieStringArray = [];
     cookieArray.push(ID);
     var cookieStringArray = JSON.stringify(cookieStringArray);
   }
 
-  res.cookie('cart', cookieStringArray);
-  res.redirect('../cart');
+  res.cookie("cart", cookieStringArray);
+  res.redirect("../cart");
 });
 
 // routes for cart page
-app.get('/cart', function (req, res) {
+app.get("/cart", function (req, res) {
   var cookieValue = req.cookies;
 
   if (cookieValue.cart) {
@@ -120,7 +131,7 @@ app.get('/cart', function (req, res) {
     var tempCartArray = [];
     var cookieArray = [];
   }
-  res.render('cartPage', {
+  res.render("cartPage", {
     cart: cookieValue.cart,
     cartNumb: cookieArray.length,
     cartValues: tempCartArray,
@@ -128,7 +139,7 @@ app.get('/cart', function (req, res) {
   });
 });
 
-app.get('/remove/:ID', function (req, res) {
+app.get("/remove/:ID", function (req, res) {
   var cookieValue = req.cookies;
   var cookieArray = JSON.parse(cookieValue.cart);
   var IDremove = req.params.ID;
@@ -141,12 +152,12 @@ app.get('/remove/:ID', function (req, res) {
   }
 
   var stringArray = JSON.stringify(cookieArray);
-  res.clearCookie('cart');
-  res.cookie('cart', stringArray);
-  res.redirect('/cart');
+  res.clearCookie("cart");
+  res.cookie("cart", stringArray);
+  res.redirect("/cart");
 });
 
-app.get('/contact', function (req, res) {
+app.get("/contact", function (req, res) {
   var cookieValue = req.cookies;
 
   if (cookieValue.cart) {
@@ -154,12 +165,12 @@ app.get('/contact', function (req, res) {
   } else {
     var cookieArray = [];
   }
-  res.render('contactPage', {
+  res.render("contactPage", {
     cartNumb: cookieArray.length,
   });
 });
 
-app.get('/submission/:text', function (req, res) {
+app.get("/submission/:text", function (req, res) {
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
@@ -169,16 +180,16 @@ app.get('/submission/:text', function (req, res) {
 
   var text = req.params.text;
 
-  res.render('submissionPage', {
+  res.render("submissionPage", {
     cartNumb: cookieArray.length,
     successText: text,
   });
 });
 
-app.post('/submit/:type', function (req, res) {
+app.post("/submit/:type", function (req, res) {
   var type = req.params.type;
 
-  if (type == 'contact') {
+  if (type == "contact") {
     var contactName = req.body.name;
     var contactEmail = req.body.email;
     var contactSubject = req.body.subject;
@@ -192,11 +203,11 @@ app.post('/submit/:type', function (req, res) {
     });
 
     newContactEntry.save();
-    res.redirect('/submission/Form_Successfully_Submitted');
+    res.redirect("/submission/Form_Successfully_Submitted");
   }
 });
 
-app.post('/chargePaypal', function (req, res) {
+app.post("/chargePaypal", function (req, res) {
   var items = req.body.description;
   items = JSON.parse(items);
 
@@ -211,43 +222,43 @@ app.post('/chargePaypal', function (req, res) {
   }
 
   var create_payment_json = {
-    intent: 'sale',
+    intent: "sale",
     payer: {
-      payment_method: 'paypal',
+      payment_method: "paypal",
     },
     redirect_urls: {
       return_url: `https://localhost:8080/success?price=${chargeAmount}&description=${items}`,
-      cancel_url: 'https://localhost:8080/cancel',
+      cancel_url: "https://localhost:8080/cancel",
     },
     transactions: [
       {
         item_list: {
           items: [
             {
-              name: 'eCommerce Sale',
+              name: "eCommerce Sale",
               sku: `${items}`,
               price: `${chargeAmount}`,
-              currency: 'USD',
+              currency: "USD",
               quantity: 1,
             },
           ],
         },
         amount: {
-          currency: 'USD',
+          currency: "USD",
           total: `${chargeAmount}`,
         },
-        description: 'Sale of Color(s)',
+        description: "Sale of Color(s)",
       },
     ],
   };
 
   paypal.payment.create(create_payment_json, function (error, payment) {
     if (error) {
-      res.send('an error has occured');
+      res.send("an error has occured");
       throw error;
     } else {
       for (var i = 0; i < payment.links.length; i++) {
-        if (payment.links[i].rel === 'approval_url') {
+        if (payment.links[i].rel === "approval_url") {
           res.redirect(payment.links[i].href);
         }
       }
@@ -255,7 +266,7 @@ app.post('/chargePaypal', function (req, res) {
   });
 });
 
-app.get('/success', function (req, res) {
+app.get("/success", function (req, res) {
   var payerID = req.query.payerID;
   var paymentID = req.query.paymentID;
   var chargeAmount = req.query.price;
@@ -266,7 +277,7 @@ app.get('/success', function (req, res) {
     transactions: [
       {
         amount: {
-          currency: 'USD',
+          currency: "USD",
           total: `${chargeAmount}`,
         },
       },
@@ -278,7 +289,7 @@ app.get('/success', function (req, res) {
     execute_payment_json,
     function (err, payment) {
       if (err) {
-        res.send('an error occurred:' + err);
+        res.send("an error occurred:" + err);
         throw err;
       } else {
         var shippingEmail = payment.payer.payer_info_email;
@@ -286,7 +297,7 @@ app.get('/success', function (req, res) {
           payment.payer.payer_info.shipping_address.receipient_name;
         var shippingAddress =
           payment.payer.payer_info.shipping_address.line1 +
-          ' ' +
+          " " +
           payment.payer.payer_info.shipping_address.line2;
 
         var shippingZip = payment.payer.payer_info.shipping_address.postal_code;
@@ -294,7 +305,7 @@ app.get('/success', function (req, res) {
         var shippingCity = payment.payer.payer_info.shipping_address.city;
         var shippingCountry =
           payment.payer.payer_info.shipping_address.country_code;
-        var Type = 'Paypal';
+        var Type = "Paypal";
 
         var newOrderEntry = new orderEntry({
           name: shippingName,
@@ -309,15 +320,15 @@ app.get('/success', function (req, res) {
         });
 
         newOrderEntry.save();
-        res.clearCookie('cart');
-        res.redirect('/submission/Your_Payment_Was_Successful');
+        res.clearCookie("cart");
+        res.redirect("/submission/Your_Payment_Was_Successful");
       }
     }
   );
 });
 
 // ajax routes
-app.get('/product/:type', function (req, res) {
+app.get("/product/:type", function (req, res) {
   var type = req.params.type;
   var tempArray = [];
 
@@ -330,7 +341,7 @@ app.get('/product/:type', function (req, res) {
   res.send({ products: tempArray });
 });
 
-app.get('/addCart/:ID', function (req, res) {
+app.get("/addCart/:ID", function (req, res) {
   var ID = req.params.ID;
   var cookieValue = req.cookies;
 
@@ -338,15 +349,15 @@ app.get('/addCart/:ID', function (req, res) {
     var cookieArray = [];
     cookieArray.push(ID);
     var cookieStringArray = JSON.stringify(cookieArray);
-    res.cookie('cart', cookieStringArray);
+    res.cookie("cart", cookieStringArray);
     res.send({ cartNumb: 1 });
   } else {
     var cartValue = cookieValue.cart;
     var cookieArray = JSON.parse(cartValue);
     cookieArray.push(ID);
     var cookieStringArray = JSON.stringify(cookieArray);
-    res.clearCookie('cart');
-    res.cookie('cart', cookieStringArray);
+    res.clearCookie("cart");
+    res.cookie("cart", cookieStringArray);
     res.send({ cartNumb: cookieArray.length });
   }
 });
@@ -354,5 +365,5 @@ app.get('/addCart/:ID', function (req, res) {
 // Start the server and listen on the specified port
 app.listen(port, function () {
   // When the server starts listening, log a message to the console
-  console.log('listening on port 8080');
+  console.log("listening on port 8080");
 });
