@@ -36,9 +36,20 @@ const orderEntry = require("./models/orderEntry");
 
 app.get("/", function (req, res) {
   var cookieValue = req.cookies;
-  console.log(cookieValue);
-  res.clearCookie("cart");
-  res.send("anda di homepage");
+  if (cookieValue.cart) {
+    var cookieArray = JSON.parse(cookieValue.cart);
+  } else {
+    var cookieArray = [];
+  }
+  res.render("homePage", {
+    products: arrayDB,
+    cartNumb: cookieArray.length,
+  });
+
+  // var cookieValue = req.cookies;
+  // console.log(cookieValue);
+  // res.clearCookie("cart");
+  // res.render("homePage");
 });
 
 app.get("/products", function (req, res) {
@@ -65,7 +76,7 @@ app.get("/products/:ID", function (req, res) {
 
   for (i = 0; i < arrayDB.length; i++) {
     if (ID == arrayDB[i].ID) {
-      res.render("listingPage", {
+      res.render("itemPage", {
         listing: arrayDB[i],
         cartNumb: cookieArray.length,
       });

@@ -1,100 +1,92 @@
 <!-- new UI to implement responsivenes using bootstrap -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Page</title>
-    <link rel="stylesheet" href="/public/stysle.css" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="../public/jquery.js"></script>
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="header">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="#">Home</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
 
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="products">Color</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="contact">Contact</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="cart"
-                  >Cart
-                  <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %> </em></a
-                >
-              </li>
-            </ul>
-          </div>
-        </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Page</title>
+  <link rel="stylesheet" href="/public/stysle.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="https://kit.fontawesome.com/42693ea64e.js" crossorigin="anonymous"></script>
+  <script src="../public/jquery.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">ADITPEDIA</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="products">Color</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact">Contact</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="cart">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="badge badge-pill badge-danger">
+                <em> <% if(cartNumb != 0) {%> <%= cartNumb %> <% } %> </em>
+              </span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <!-- body content -->
-      <div class="colorsBody">
-        <div class="buttonsContainer">
-          <button id="RedsButton" class="btn btn-primary">Reds</button>
-          <button id="BluesButton" class="btn btn-primary">Blues</button>
-          <button id="GreensButton" class="btn btn-primary">Greens</button>
-          <button id="Others" class="btn btn-primary">Others</button>
-        </div>
+    </nav>
 
-        <div class="row productsContainer">
-          <% for (i =0 ; i < products.length ; i++) { %>
+    <!-- body content -->
+    <div class="colorsBody">
+      <div class="buttonsContainer">
+        <button id="RedsButton" class="btn btn-primary">Reds</button>
+        <button id="BluesButton" class="btn btn-primary">Blues</button>
+        <button id="GreensButton" class="btn btn-primary">Greens</button>
+        <button id="Others" class="btn btn-primary">Others</button>
+      </div>
 
-          <div class="col-md-3 col-sm-6 listing">
-            <div class="card">
+      <div class="row productsContainer">
+        <% for (i =0 ; i < products.length ; i++) { %>
+
+        <div class="col-md-3 col-sm-6 listing">
+          <div class="card">
+            <a href="products/<%= products[i].ID %>">
+              <img class="card-img-top" src="/public/<%= products[i].image %>" alt="<%= products[i].tittle %>" />
+            </a>
+
+            <div class="card-body">
               <a href="products/<%= products[i].ID %>">
-                <img
-                  class="card-img-top"
-                  src="/public/<%= products[i].image %>"
-                  alt="<%= products[i].tittle %>"
-                />
+                <h5 class="card-title"><%= products[i].tittle %></h5>
               </a>
+              <p class="card-text">$<%= products[i].price %></p>
 
-              <div class="card-body">
-                <a href="products/<%= products[i].ID %>">
-                  <h5 class="card-title"><%= products[i].tittle %></h5>
-                </a>
-                <p class="card-text">$<%= products[i].price %></p>
-
-                <a href="buyNow/<%= products[i].ID %>">
-                  <button id="buyNow" class="btn btn-primary">
-                    Buy It Now
-                  </button>
-                </a>
-                <button
-                  id="addCart"
-                  class="btn btn-primary"
-                  value="<%= products[i].ID %>"
-                >
-                  Add To Cart
+              <a href="buyNow/<%= products[i].ID %>">
+                <button id="buyNow" class="btn btn-primary">
+                  Buy It Now
                 </button>
-              </div>
+              </a>
+              <button id="addCart" class="btn btn-primary" value="<%= products[i].ID %>">
+                Add To Cart
+              </button>
             </div>
           </div>
-          <% } %>
         </div>
+        <% } %>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
