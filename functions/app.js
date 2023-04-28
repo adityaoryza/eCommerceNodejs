@@ -3,7 +3,10 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const serverless = require("serverless-http");
 const paypal = require("paypal-rest-sdk");
+const router = express.Router();
+
 // using paypal API requires
 paypal.configure({
   mode: "sandbox",
@@ -14,13 +17,14 @@ paypal.configure({
 });
 const app = express();
 
+// app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use("/public", express.static("public"));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var arrayDB = require("./public/DBdata");
+var arrayDB = require("../public/DBdata");
 
 mongoose.connect("mongodb://localhost/ecommerceDB");
 mongoose.connection
@@ -31,10 +35,10 @@ mongoose.connection
     console.log(err);
   });
 
-const contactEntry = require("./models/contactEntry");
-const orderEntry = require("./models/orderEntry");
+const contactEntry = require("../models/contactEntry");
+const orderEntry = require("../models/orderEntry");
 
-app.get("/", function (req, res) {
+router.get("/", function (req, res) {
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
@@ -52,7 +56,7 @@ app.get("/", function (req, res) {
   // res.render("homePage");
 });
 
-app.get("/products", function (req, res) {
+router.get("/products", function (req, res) {
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
@@ -65,7 +69,7 @@ app.get("/products", function (req, res) {
   });
 });
 
-app.get("/products/:ID", function (req, res) {
+router.get("/products/:ID", function (req, res) {
   var ID = req.params.ID;
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
@@ -84,7 +88,7 @@ app.get("/products/:ID", function (req, res) {
   }
 });
 
-app.get("/buyNow/:ID", function (req, res) {
+router.get("/buyNow/:ID", function (req, res) {
   var cookieValue = req.cookies;
   var ID = req.params.ID;
 
@@ -105,7 +109,7 @@ app.get("/buyNow/:ID", function (req, res) {
 });
 
 // routes for cart page
-app.get("/cart", function (req, res) {
+router.get("/cart", function (req, res) {
   var cookieValue = req.cookies;
 
   if (cookieValue.cart) {
@@ -139,7 +143,7 @@ app.get("/cart", function (req, res) {
   });
 });
 
-app.get("/remove/:ID", function (req, res) {
+router.get("/remove/:ID", function (req, res) {
   var cookieValue = req.cookies;
   var cookieArray = JSON.parse(cookieValue.cart);
   var IDremove = req.params.ID;
@@ -157,7 +161,7 @@ app.get("/remove/:ID", function (req, res) {
   res.redirect("/cart");
 });
 
-app.get("/contact", function (req, res) {
+router.get("/contact", function (req, res) {
   var cookieValue = req.cookies;
 
   if (cookieValue.cart) {
@@ -170,7 +174,7 @@ app.get("/contact", function (req, res) {
   });
 });
 
-app.get("/submission/:text", function (req, res) {
+router.get("/submission/:text", function (req, res) {
   var cookieValue = req.cookies;
   if (cookieValue.cart) {
     var cookieArray = JSON.parse(cookieValue.cart);
@@ -186,7 +190,7 @@ app.get("/submission/:text", function (req, res) {
   });
 });
 
-app.post("/submit/:type", function (req, res) {
+router.post("/submit/:type", function (req, res) {
   var type = req.params.type;
 
   if (type == "contact") {
@@ -207,7 +211,7 @@ app.post("/submit/:type", function (req, res) {
   }
 });
 
-app.post("/chargePaypal", function (req, res) {
+router.post("/chargePaypal", function (req, res) {
   var items = req.body.description;
   items = JSON.parse(items);
 
@@ -266,7 +270,7 @@ app.post("/chargePaypal", function (req, res) {
   });
 });
 
-app.get("/success", function (req, res) {
+router.get("/success", function (req, res) {
   var payerID = req.query.payerID;
   var paymentID = req.query.paymentID;
   var chargeAmount = req.query.price;
@@ -328,7 +332,7 @@ app.get("/success", function (req, res) {
 });
 
 // ajax routes
-app.get("/product/:type", function (req, res) {
+router.get("/product/:type", function (req, res) {
   var type = req.params.type;
   var tempArray = [];
 
@@ -341,7 +345,7 @@ app.get("/product/:type", function (req, res) {
   res.send({ products: tempArray });
 });
 
-app.get("/addCart/:ID", function (req, res) {
+router.get("/addCart/:ID", function (req, res) {
   var ID = req.params.ID;
   var cookieValue = req.cookies;
 
@@ -362,8 +366,12 @@ app.get("/addCart/:ID", function (req, res) {
   }
 });
 
-// Start the server and listen on the specified port
-app.listen(port, function () {
-  // When the server starts listening, log a message to the console
-  console.log("listening on port " + port);
-});
+// using serverless application
+app.use("/.netlify/functions/app", router);
+module.exports.handler = serverless(app);
+
+// // Start the server and listen on the specified port
+// app.listen(port, function () {
+//   // When the server starts listening, log a message to the console
+//   console.log("listening on port " + port);
+// });
