@@ -365,5 +365,5 @@ app.get("/addCart/:ID", function (req, res) {
 // Start the server and listen on the specified port
 app.listen(port, function () {
   // When the server starts listening, log a message to the console
-  console.log("listening on port 8080");
+  console.log("listening on port " + port);
 });
