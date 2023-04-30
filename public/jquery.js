@@ -19,9 +19,11 @@ $(document).ready(function () {
           var ID = data.products[i].ID;
 
           $(".productsContainer").append(`
-      <div class=".container-md">
+      <div class="col-md-3 col-sm-6 listing">
         <div class="card">
-          <img src="public/${img}" class="card-img-top" alt="${title}">
+            <a href="/products/${ID}">
+              <img src="public/${img}" class="card-img-top" alt="${title}">
+            </a>
           <div class="card-body">
             <h5 class="card-title">${title}</h5>
             <p class="card-text">$${price}</p>
@@ -58,4 +60,45 @@ $(document).ready(function () {
       },
     });
   });
+
+  // form validation
+  function validateForm() {
+    // Get the form inputs
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var subject = document.getElementById("subject").value.trim();
+    var comment = document.getElementById("comment").value.trim();
+
+    // Validate the inputs
+    if (name == "") {
+      document.getElementById("name").classList.add("is-invalid");
+      return false;
+    } else {
+      document.getElementById("name").classList.remove("is-invalid");
+    }
+
+    if (email == "") {
+      document.getElementById("email").classList.add("is-invalid");
+      return false;
+    } else {
+      document.getElementById("email").classList.remove("is-invalid");
+    }
+
+    if (subject == "") {
+      document.getElementById("subject").classList.add("is-invalid");
+      return false;
+    } else {
+      document.getElementById("subject").classList.remove("is-invalid");
+    }
+
+    if (comment == "") {
+      document.getElementById("comment").classList.add("is-invalid");
+      return false;
+    } else {
+      document.getElementById("comment").classList.remove("is-invalid");
+    }
+
+    // If all inputs are valid, return true
+    return true;
+  }
 });

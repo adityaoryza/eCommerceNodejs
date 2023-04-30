@@ -3,14 +3,14 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require("dotenv").config();
 const paypal = require("paypal-rest-sdk");
 // using paypal API requires
 paypal.configure({
   mode: "sandbox",
   client_id:
     "AS8WhP5kI_S2om83A2i88dvBJVQJxTwAGbhkABeIk1O_6JKcUVCDiJLkEBz4-iJngaTeb_CdXL1Qzcea",
-  client_secret:
-    "EHa94zj1eJxIUj8eQ9a3c_F5ZRckzNcsmnBq38vwGBe7-n7R3ijF_I75Anh4kLyS5enqQohArXB4tOB-",
+  client_secret: process.env.CLIENT_SECRET,
 });
 const app = express();
 
@@ -41,6 +41,7 @@ app.get("/", function (req, res) {
   } else {
     var cookieArray = [];
   }
+  res.clearCookie("cart");
   res.render("homePage", {
     products: arrayDB,
     cartNumb: cookieArray.length,
@@ -48,7 +49,6 @@ app.get("/", function (req, res) {
 
   // var cookieValue = req.cookies;
   // console.log(cookieValue);
-  // res.clearCookie("cart");
   // res.render("homePage");
 });
 
