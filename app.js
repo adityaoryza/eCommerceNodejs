@@ -22,13 +22,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 var arrayDB = require('./public/DBdata');
 
-mongoose.connect('mongodb://localhost/ecommerceDB');
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
 mongoose.connection
   .once('open', function () {
-    console.log('successfully connected to DB...');
+    console.log('Successfully connected to the database...');
   })
   .on('error', function (err) {
-    console.log(err);
+    console.log('Error connecting to the database:', err);
   });
 
 const contactEntry = require('./models/contactEntry');
