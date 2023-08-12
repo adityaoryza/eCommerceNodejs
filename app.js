@@ -46,10 +46,6 @@ app.get('/', function (req, res) {
     products: arrayDB,
     cartNumb: cookieArray.length,
   });
-
-  // var cookieValue = req.cookies;
-  // console.log(cookieValue);
-  // res.render("homePage");
 });
 
 app.get('/products', function (req, res) {
