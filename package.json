@@ -2,7 +2,7 @@
   "name": "e-commercenodejs",
   "version": "1.0.0",
   "description": "/ - the homepage     /products - a page that lists all products     /products/:ID - a page that displays a specific product based on its ID     /product/:type - a page that lists all products of a certain type",
-  "main": "App.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app",
     "dev": "nodemon app",
