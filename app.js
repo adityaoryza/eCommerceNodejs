@@ -366,4 +366,10 @@ app.get('/addCart/:ID', function (req, res) {
 app.listen(port, function () {
   // When the server starts listening, log a message to the console
   console.log('listening on port ' + port);
+  console.log('listening on port ' + port);
+  console.log('listening on port ' + port);
+  console.log('listening on port ' + port);
+  console.log('listening on port ' + port);
+  console.log('listening on port ' + port);
+  console.log('listening on port ' + port);
 });
