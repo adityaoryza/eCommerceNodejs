@@ -3,6 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 require('dotenv').config();
 const paypal = require('paypal-rest-sdk');
 // using paypal API requires
@@ -12,6 +13,18 @@ paypal.configure({
     'AS8WhP5kI_S2om83A2i88dvBJVQJxTwAGbhkABeIk1O_6JKcUVCDiJLkEBz4-iJngaTeb_CdXL1Qzcea',
   client_secret: process.env.CLIENT_SECRET,
 });
+
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"], // Allow loading resources from the same origin
+    scriptSrc: ["'self'", "https://www.google.com"], // Allow loading scripts from self and google.com
+    styleSrc: ["'self'"], // Allow loading styles from self
+    imgSrc: ["'self'"], // Allow loading images from self
+    fontSrc: ["'self'"], // Allow loading fonts from self
+    frameSrc: ["'self'"], // Allow embedding iframes from self
+  },
+}));
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -22,10 +35,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 var arrayDB = require('./public/DBdata');
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect(process.env.MONGO_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
 mongoose.connection
   .once('open', function () {
