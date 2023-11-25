@@ -14,6 +14,13 @@ paypal.configure({
   client_secret: process.env.CLIENT_SECRET,
 });
 
+const app = express();
+
+app.set('view engine', 'ejs');
+app.use('/public', express.static('public'));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"], // Allow loading resources from the same origin
@@ -24,14 +31,6 @@ app.use(helmet.contentSecurityPolicy({
     frameSrc: ["'self'"], // Allow embedding iframes from self
   },
 }));
-
-const app = express();
-
-app.set('view engine', 'ejs');
-app.use('/public', express.static('public'));
-app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 var arrayDB = require('./public/DBdata');
 
